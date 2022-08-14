@@ -1,0 +1,106 @@
+{
+    "name": "asal400_lab2_writecampaignanalyticstoasa",
+    "properties": {
+        "type": "MappingDataFlow",
+        "typeProperties": {
+            "sources": [
+                {
+                    "dataset": {
+                        "referenceName": "asal400_campaign_analytics_source",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CampaignAnalytics"
+                }
+            ],
+            "sinks": [
+                {
+                    "dataset": {
+                        "referenceName": "asal400_wwi_campaign_analytics_asa",
+                        "type": "DatasetReference"
+                    },
+                    "name": "CampaignAnalyticsASA"
+                }
+            ],
+            "transformations": [
+                {
+                    "name": "MapCampaignAnalytics"
+                },
+                {
+                    "name": "ConvertColumnTypesAndValues"
+                },
+                {
+                    "name": "SelectCampaignAnalyticsColumns"
+                }
+            ],
+            "scriptLines": [
+                "source(output(",
+                "          {_col0_} as string,",
+                "          {_col1_} as string,",
+                "          {_col2_} as string,",
+                "          {_col3_} as string,",
+                "          {_col4_} as string,",
+                "          {_col5_} as double,",
+                "          {_col6_} as string,",
+                "          {_col7_} as double,",
+                "          {_col8_} as string,",
+                "          {_col9_} as string",
+                "     ),",
+                "     allowSchemaDrift: true,",
+                "     validateSchema: false,",
+                "     ignoreNoFilesFound: false,",
+                "     skipLines: 1) ~> CampaignAnalytics",
+                "CampaignAnalytics select(mapColumn(",
+                "          Region = {_col0_},",
+                "          Country = {_col1_},",
+                "          ProductCategory = {_col2_},",
+                "          CampaignName = {_col3_},",
+                "          RevenuePart1 = {_col4_},",
+                "          Revenue = {_col5_},",
+                "          RevenueTargetPart1 = {_col6_},",
+                "          RevenueTarget = {_col7_},",
+                "          City = {_col8_},",
+                "          State = {_col9_}",
+                "     ),",
+                "     skipDuplicateMapInputs: true,",
+                "     skipDuplicateMapOutputs: true) ~> MapCampaignAnalytics",
+                "MapCampaignAnalytics derive(Revenue = toDecimal(replace(concat(toString(RevenuePart1), toString(Revenue)), '\\\\', ''), 10, 2, '$###,###.##'),",
+                "          RevenueTarget = toDecimal(replace(concat(toString(RevenueTargetPart1), toString(RevenueTarget)), '\\\\', ''), 10, 2, '$###,###.##')) ~> ConvertColumnTypesAndValues",
+                "ConvertColumnTypesAndValues select(mapColumn(",
+                "          Region,",
+                "          Country,",
+                "          ProductCategory,",
+                "          CampaignName,",
+                "          Revenue,",
+                "          RevenueTarget,",
+                "          City,",
+                "          State",
+                "     ),",
+                "     skipDuplicateMapInputs: true,",
+                "     skipDuplicateMapOutputs: true) ~> SelectCampaignAnalyticsColumns",
+                "SelectCampaignAnalyticsColumns sink(allowSchemaDrift: true,",
+                "     validateSchema: false,",
+                "     input(",
+                "          Region as string,",
+                "          Country as string,",
+                "          ProductCategory as string,",
+                "          CampaignName as string,",
+                "          Revenue as decimal(10,2),",
+                "          RevenueTarget as decimal(10,2),",
+                "          City as string,",
+                "          State as string",
+                "     ),",
+                "     deletable:false,",
+                "     insertable:true,",
+                "     updateable:false,",
+                "     upsertable:false,",
+                "     truncate:true,",
+                "     format: 'table',",
+                "     staged: false,",
+                "     skipDuplicateMapInputs: true,",
+                "     skipDuplicateMapOutputs: true,",
+                "     saveOrder: 1,",
+                "     errorHandlingOption: 'stopOnFirstError') ~> CampaignAnalyticsASA"
+            ]
+        }
+    }
+}
