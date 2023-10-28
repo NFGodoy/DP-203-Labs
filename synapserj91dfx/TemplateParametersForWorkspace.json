@@ -11,6 +11,9 @@
 		"synapserj91dfx-WorkspaceDefaultSqlServer_connectionString": {
 			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapserj91dfx.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
 		},
+		"Products_properties_typeProperties_url": {
+			"value": "https://raw.githubusercontent.com/MicrosoftLearning/dp-203-azure-data-engineer/master/Allfiles/labs/01/adventureworks/products.csv"
+		},
 		"synapserj91dfx-WorkspaceDefaultStorage_properties_typeProperties_url": {
 			"value": "https://datalakerj91dfx.dfs.core.windows.net"
 		}
