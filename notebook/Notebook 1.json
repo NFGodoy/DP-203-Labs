@@ -1,0 +1,97 @@
+{
+	"name": "Notebook 1",
+	"properties": {
+		"nbformat": 4,
+		"nbformat_minor": 2,
+		"bigDataPool": {
+			"referenceName": "sparkrj91dfx",
+			"type": "BigDataPoolReference"
+		},
+		"sessionProperties": {
+			"driverMemory": "28g",
+			"driverCores": 4,
+			"executorMemory": "28g",
+			"executorCores": 4,
+			"numExecutors": 2,
+			"conf": {
+				"spark.dynamicAllocation.enabled": "false",
+				"spark.dynamicAllocation.minExecutors": "2",
+				"spark.dynamicAllocation.maxExecutors": "2",
+				"spark.autotune.trackingId": "d47dd158-ed07-4d23-911f-a24601f310a0"
+			}
+		},
+		"metadata": {
+			"saveOutput": true,
+			"enableDebugMode": false,
+			"kernelspec": {
+				"name": "synapse_pyspark",
+				"display_name": "Synapse PySpark"
+			},
+			"language_info": {
+				"name": "python"
+			},
+			"a365ComputeOptions": {
+				"id": "/subscriptions/d6853663-561a-41dd-b865-270a81a3015d/resourceGroups/dp203-rj91dfx/providers/Microsoft.Synapse/workspaces/synapserj91dfx/bigDataPools/sparkrj91dfx",
+				"name": "sparkrj91dfx",
+				"type": "Spark",
+				"endpoint": "https://synapserj91dfx.dev.azuresynapse.net/livyApi/versions/2019-11-01-preview/sparkPools/sparkrj91dfx",
+				"auth": {
+					"type": "AAD",
+					"authResource": "https://dev.azuresynapse.net"
+				},
+				"sparkVersion": "3.1",
+				"nodeCount": 3,
+				"cores": 4,
+				"memory": 28,
+				"automaticScaleJobs": false
+			},
+			"sessionKeepAliveTimeout": 30
+		},
+		"cells": [
+			{
+				"cell_type": "code",
+				"metadata": {
+					"microsoft": {
+						"language": "python"
+					}
+				},
+				"source": [
+					"%%pyspark\r\n",
+					"df = spark.read.load('abfss://mycontainer@datalakerj91dfx.dfs.core.windows.net/Data.csv', format='csv'\r\n",
+					"## If header exists uncomment line below\r\n",
+					", header=True\r\n",
+					")\r\n",
+					"df.write.mode(\"overwrite\").parquet('Data.parquet')\r\n",
+					"df1=spark.read.parquet('Data.parquet')\r\n",
+					"df1.write.mode(\"append\").saveAsTable(\"default.YourTableName2\")"
+				],
+				"execution_count": 21
+			},
+			{
+				"cell_type": "code",
+				"metadata": {
+					"jupyter": {
+						"source_hidden": false,
+						"outputs_hidden": false
+					},
+					"nteract": {
+						"transient": {
+							"deleting": false
+						}
+					},
+					"microsoft": {
+						"language": "sparksql"
+					},
+					"collapsed": false
+				},
+				"source": [
+					"%%sql\r\n",
+					"--create table default.yourtablename(Id int, Email string)\r\n",
+					"--insert into default.yourtablename values (2,'test@comp1.com')\r\n",
+					"select * from default.yourtablename2"
+				],
+				"execution_count": 22
+			}
+		]
+	}
+}
