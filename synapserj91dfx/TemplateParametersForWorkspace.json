@@ -1,0 +1,18 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"workspaceName": {
+			"value": "synapserj91dfx"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"synapserj91dfx-WorkspaceDefaultSqlServer_connectionString": {
+			"value": "Integrated Security=False;Encrypt=True;Connection Timeout=30;Data Source=tcp:synapserj91dfx.sql.azuresynapse.net,1433;Initial Catalog=@{linkedService().DBName}"
+		},
+		"synapserj91dfx-WorkspaceDefaultStorage_properties_typeProperties_url": {
+			"value": "https://datalakerj91dfx.dfs.core.windows.net"
+		}
+	}
+}
